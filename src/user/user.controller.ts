@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,8 +23,8 @@ export class UserController {
 
   @Get()
   findAll() {
-    throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
-    // return this.userService.findAll();
+    // throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
+    return this.userService.findAll();
   }
 
   @Get(':id')
