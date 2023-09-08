@@ -19,9 +19,6 @@ export class User {
 
   @Prop()
   createdAt: string;
-
-  @Prop()
-  deletedAt?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

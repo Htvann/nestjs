@@ -17,28 +17,24 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    console.log({ createUserDto });
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
   findAll() {
-    // throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     return this.userService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    try {
-      this.userService.update(+id, updateUserDto);
-    } catch (error) {
-      throw new HttpException(error, 123123);
-    }
+    return await this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
