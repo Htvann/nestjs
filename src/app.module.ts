@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { AnimalModule } from './animal/animal.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
+import getMongooseUrl from './utils/get-mongoose-url';
 
 @Module({
   imports: [
     UserModule,
     AnimalModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/_freecodecamp', {
+    MongooseModule.forRoot(getMongooseUrl(), {
       autoIndex: true,
       autoCreate: true,
     }),

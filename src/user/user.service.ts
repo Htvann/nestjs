@@ -18,7 +18,7 @@ export class UserService {
       createdAt: new Date(),
     }).save();
   }
-  async findAll() {
+  async findAll(): Promise<User[]> {
     return await this.model.find().exec();
   }
 
@@ -30,7 +30,8 @@ export class UserService {
     return await this.model.findByIdAndUpdate(id, updateUserDto).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<User[]> {
+    await this.model.findByIdAndDelete(id);
+    return await this.model.find().exec();
   }
 }
