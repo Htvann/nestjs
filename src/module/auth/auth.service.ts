@@ -1,17 +1,24 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Auth, AuthDocument } from './entities/auth.entity';
 import mongoose, { Model } from 'mongoose';
 import { AuthSignUpDto } from './dto/signup.dto';
 import { checkHashPassword, hashPassword } from 'src/utils/hashing-password';
 import { AuthLoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(Auth.name) private readonly AuthMode: Model<AuthDocument>,
+    @InjectModel(Auth.name)
+    private readonly AuthMode: Model<AuthDocument>,
+    private readonly jwtService: JwtService,
   ) {}
-
   async login(bodyLogin: AuthLoginDto) {
     try {
       const user = await this.AuthMode.findOne({ name: bodyLogin.name });
@@ -20,9 +27,14 @@ export class AuthService {
           bodyLogin.password,
           user.password,
         );
-        if (checkpass) return user;
+        if (checkpass) {
+          const payload = { name: user.name, password: user.password };
+          return {
+            access_token: await this.jwtService.signAsync(payload),
+          };
+        }
       }
-      throw new HttpException('nothing', HttpStatus.NOT_FOUND);
+      throw new UnauthorizedException();
     } catch (error) {
       throw error;
     }
@@ -33,7 +45,7 @@ export class AuthService {
     const hash = await hashPassword(password);
     try {
       const user = await this.AuthMode.findOne({ name: params.name });
-      if (user) throw new HttpException('name already exits', 1234);
+      if (user) throw new HttpException('CONFLICT', HttpStatus.CONFLICT);
       const data = {
         name: name,
         password: hash,
@@ -41,6 +53,7 @@ export class AuthService {
       };
       return await this.AuthMode.create(data);
     } catch (err) {
+      console.log(err);
       throw err;
     }
   }

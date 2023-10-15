@@ -15,7 +15,5 @@ import { AuthModule } from './module/auth/auth.module';
     AnimalModule,
     AuthModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

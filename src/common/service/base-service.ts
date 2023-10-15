@@ -37,6 +37,7 @@ export class BaseService<T extends Document> {
     try {
       return await this.model.create(data);
     } catch (err) {
+      console.log('chgeck');
       throw err;
     }
   }
