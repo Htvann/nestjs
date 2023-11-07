@@ -1,15 +1,7 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateUserDto } from './create-user.dto';
+import { mongo } from 'mongoose';
 
-export class UpdateUserDto {
-  @IsOptional()
-  @IsString()
-  name: string;
-
-  @IsOptional()
-  @IsNumber()
-  age: string;
-
-  @IsOptional()
-  @IsString()
-  address: string;
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+  _id: mongo.ObjectId;
 }

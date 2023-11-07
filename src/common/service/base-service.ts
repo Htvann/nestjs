@@ -8,7 +8,9 @@ import {
   ProjectionType,
   QueryOptions,
   UpdateQuery,
+  mongo,
 } from 'mongoose';
+import { Base_Response } from 'src/utils/base-response';
 
 @Injectable()
 export class BaseService<T extends Document> {
@@ -21,25 +23,38 @@ export class BaseService<T extends Document> {
     conditions: FilterQuery<T>,
     projection: string | Record<string, unknown> = {},
     options: Record<string, unknown> = {},
-  ): Promise<T> {
-    try {
-      return await this.model.findOne(
-        conditions as FilterQuery<T>,
-        projection,
-        options,
-      );
-    } catch (err) {
-      throw err;
+  ): Promise<Base_Response<T>> {
+    const data = await this.model.findOne(
+      conditions as FilterQuery<T>,
+      projection,
+      options,
+    );
+    if (data) {
+      return new Base_Response<T>({ status: 200, success: true, data: data });
     }
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        error: 'User doest not exits',
+      },
+      HttpStatus.NOT_FOUND,
+    );
   }
 
-  async insertOne(data: Partial<Record<keyof T, unknown>>): Promise<T> {
-    try {
-      return await this.model.create(data);
-    } catch (err) {
-      console.log('chgeck');
-      throw err;
+  async insertOne(
+    data: Partial<Record<keyof T, unknown>>,
+  ): Promise<Base_Response<T>> {
+    const main = await this.model.create(data);
+    if (main) {
+      return new Base_Response<T>({ status: 200, success: true, data: main });
     }
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        error: 'some thing went wrong',
+      },
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async find(
@@ -47,39 +62,33 @@ export class BaseService<T extends Document> {
     projection?: ProjectionType<T> | null | undefined,
     options?: QueryOptions<T> | null | undefined,
   ): Promise<T[]> {
-    try {
-      const data = await this.model.find(filter, projection, options);
-      if (data) return data;
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    } catch (err) {
-      throw err;
-    }
+    const data = await this.model.find(filter, projection, options);
+    if (data) return data;
+    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   }
 
   async findById(
     id: string,
     projection: string | Record<string, unknown> = {},
     options: Record<string, unknown> = {},
-  ): Promise<T> {
-    try {
-      const data = await this.model.findById(id, projection, options);
-      if (data) return data;
-      throw new HttpException('NO CONTENT', HttpStatus.NO_CONTENT);
-    } catch (err) {
-      throw err;
+  ): Promise<Base_Response<T>> {
+    const data = await this.model.findById(id, projection, options);
+    if (data) {
+      return new Base_Response<T>({ status: 200, success: true, data: data });
     }
+    throw new HttpException('NO CONTENT', HttpStatus.NO_CONTENT);
   }
 
   async findByIdAndUpdate(
-    id: string,
+    id: mongo.ObjectId,
     update: UpdateQuery<T>,
     options: Record<string, unknown> = {},
-  ): Promise<T> {
-    try {
-      return await this.model.findByIdAndUpdate(id, update, options);
-    } catch (err) {
-      throw err;
+  ): Promise<Base_Response<T>> {
+    const data = await this.model.findByIdAndUpdate(id, update, options);
+    if (data) {
+      return new Base_Response<T>({ status: 200, success: true, data: data });
     }
+    throw new HttpException('NO CONTENT', HttpStatus.NO_CONTENT);
   }
 
   async findOneAndUpdate(
@@ -116,5 +125,19 @@ export class BaseService<T extends Document> {
     } catch (err) {
       throw err;
     }
+  }
+
+  async deleteOne(id: mongo.ObjectId): Promise<Base_Response<T>> {
+    const data = await this.model.findByIdAndDelete(id);
+    if (data) {
+      return new Base_Response<T>({ status: 200, success: true });
+    }
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        error: 'some thing went wrong',
+      },
+      HttpStatus.NOT_FOUND,
+    );
   }
 }

@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import getMongooseUrl from './utils/get-mongoose-url';
 import { UserModule } from './module/user/user.module';
-import { AnimalModule } from './module/animal/animal.module';
-import { AuthModule } from './module/auth/auth.module';
+import getMongooseUrl from './utils/get-mongoose-url';
 
 @Module({
   imports: [
@@ -12,8 +10,6 @@ import { AuthModule } from './module/auth/auth.module';
       autoCreate: true,
     }),
     UserModule,
-    AnimalModule,
-    AuthModule,
   ],
 })
 export class AppModule {}

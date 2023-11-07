@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserDocument } from './entities/user.entity';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './schemas/user.schemas';
+import { Model } from 'mongoose';
 import { BaseService } from 'src/common/service/base-service';
 
 @Injectable()
 export class UserService extends BaseService<UserDocument> {
-  constructor(
-    @InjectModel(User.name) private readonly UserMode: Model<UserDocument>,
-  ) {
-    super(UserMode);
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
+    super(userModel);
   }
 
-  // async findOne(id: string): Promise<User> {
-  //   return await this.UserMode.findById(id).exec();
-  // }
+  async checkEmail(email: string) {
+    return await this.userModel.findOne({ email: email });
+  }
 }
