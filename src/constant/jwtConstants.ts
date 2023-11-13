@@ -1,3 +1,3 @@
 export const jwtConstants = {
-  secret: 'hashing password',
+  secret: "doubui",
 };

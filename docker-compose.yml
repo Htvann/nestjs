@@ -1,31 +1,19 @@
-version: '3.1'
+version: "3.1"
 
 services:
-  # backend:
-  #   image: backend_image
-  #   restart: always
-  #   container_name: backend
-  #   build:
-  #     context: ./
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     - my_network
-  #   volumes:
-  #     - ./:/app
-  #     - /app/node_modules
-
   mongo:
     image: mongo
     restart: always
-    container_name: mongodb_nest
+    container_name: mongodb_amazon
     # networks:
-    #   - my_network
+    #   - nest_network
     ports:
       - 27017:27017
     volumes:
-      - /usr/data:/data/db
+      - amazon:/data/db
+
 # networks:
-#   my_network:
-#     name: my_network
+#   nest_network:
+
+volumes:
+  amazon:
