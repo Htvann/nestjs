@@ -4,12 +4,13 @@ import { CreateUserDto } from "../user/dto/user-create.dto";
 import { checkHashPassword, hashPassword } from "src/utils/hashing-password";
 import { ILogin } from "./dto/signin.dto";
 import { JwtService } from "@nestjs/jwt";
+import { ObjectId } from "mongoose";
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async register(dto: Readonly<CreateUserDto>) {
@@ -29,17 +30,22 @@ export class AuthService {
   async doestPasswordMatch(dto: ILogin) {
     const user = await this.userService._findByEmail(dto.email);
     if (user) {
-      return await checkHashPassword(dto.password, user.password);
+      const check = await checkHashPassword(dto.password, user.password);
+      if (check) {
+        return user;
+      }
     }
+    return null;
   }
 
-  async generateJwt({ email }: { email: string }) {
-    return await this.jwtService.signAsync({ email });
+  async generateJwt(id: ObjectId) {
+    return await this.jwtService.signAsync({ id });
   }
 
-  async login({ email }: { email: string }) {
+  async login({ id }: { id: ObjectId }) {
     return {
-      jwt: await this.generateJwt({ email: email }),
+      data: await this.userService._getUserDetail(id),
+      jwt: await this.generateJwt(id),
     };
   }
 }
