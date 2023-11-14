@@ -38,9 +38,7 @@ export class AuthService {
   }
 
   async login({ email }: { email: string }) {
-    console.log(email);
     return {
-      // data: await this.userService._findByEmail(email),
       jwt: await this.generateJwt({ email: email }),
     };
   }
