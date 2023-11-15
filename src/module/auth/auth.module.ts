@@ -14,7 +14,7 @@ import { jwtConstants } from "src/constant/jwtConstants";
       useFactory: () => ({
         secret: jwtConstants.secret,
         signOptions: {
-          expiresIn: "3600s",
+          expiresIn: jwtConstants.expiresIn,
         },
       }),
     }),
