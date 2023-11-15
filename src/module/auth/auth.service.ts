@@ -4,7 +4,7 @@ import { CreateUserDto } from "../user/dto/user-create.dto";
 import { checkHashPassword, hashPassword } from "src/utils/hashing-password";
 import { ILogin } from "./dto/signin.dto";
 import { JwtService } from "@nestjs/jwt";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 @Injectable()
 export class AuthService {
@@ -38,11 +38,11 @@ export class AuthService {
     return null;
   }
 
-  async generateJwt(id: ObjectId) {
+  async generateJwt(id: Types.ObjectId) {
     return await this.jwtService.signAsync({ id });
   }
 
-  async login({ id }: { id: ObjectId }) {
+  async login({ id }: { id: Types.ObjectId }) {
     return {
       data: await this.userService._getUserDetail(id),
       jwt: await this.generateJwt(id),

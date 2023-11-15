@@ -32,7 +32,7 @@ export class ProductController {
     @Param("id") id: string,
     @Body("name") name: string,
     @Body("total") total: number,
-    @Body("description") description: string
+    @Body("description") description: string,
   ) {
     const item = await this.productService.findOne(id);
     if (item) {
@@ -48,7 +48,7 @@ export class ProductController {
   async createProduct(
     @Body("name") name: string,
     @Body("total") total: number,
-    @Body("description") description: string
+    @Body("description") description: string,
   ) {
     return await this.productService.create({
       name: name,

@@ -9,6 +9,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "./module/user/user.module";
 import { AuthModule } from "./module/auth/auth.module";
 import { LoggerMiddleware } from "./utils/middleware";
+import { OrderModule } from './module/order/order.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LoggerMiddleware } from "./utils/middleware";
     ProductModule,
     UserModule,
     AuthModule,
+    OrderModule,
   ],
 })
 export class AppModule implements NestModule {
