@@ -1,9 +1,15 @@
-import { Prop } from "@nestjs/mongoose";
-import { IsArray } from "class-validator";
-import { Types } from "mongoose";
+import { IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+
+class IProduct {
+  @IsString()
+  id: string;
+
+  @IsNumber()
+  amount: number;
+}
 
 export class CreateOrderDto {
-  @IsArray()
-  @Prop({ default: [] })
-  product: Types.ObjectId[];
+  @Type(() => IProduct)
+  product: IProduct[];
 }
