@@ -1,9 +1,8 @@
-import { Controller, Post, Body, UseGuards } from "@nestjs/common";
+import { Controller, Post, Body, UseGuards, Get } from "@nestjs/common";
 import { OrderService } from "./order.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { JwtGuard } from "../auth/guards/jwt.guards";
 import { CurrentUserDto, ICurrentUser } from "../auth/dto/user.decorator";
-import { Order } from "./schemas/order.schema";
 
 @UseGuards(JwtGuard)
 @Controller("order")
@@ -16,10 +15,20 @@ export class OrderController {
     @CurrentUserDto() user: ICurrentUser,
   ) {
     const userId = user.userId;
-    const dto: Order = {
+    const dto = {
       userId: userId,
       ...createOrderDto,
     };
     return this.orderService.create(dto);
   }
+
+  @Get()
+  async getAllOrder() {
+    return this.orderService.getAll();
+  }
+
+  // @Get()
+  // getByUser(id: Types.ObjectId) {
+  //   return this.orderService.getAll();
+  // }
 }
