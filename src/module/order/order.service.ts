@@ -42,7 +42,7 @@ export class OrderService {
     const data = await this.orderModel.findById(id);
 
     try {
-      const arrProduct = await this.productModel.find({
+      await this.productModel.find({
         _id: { $in: data.products.map((i) => i.id) },
       });
     } catch (error) {
