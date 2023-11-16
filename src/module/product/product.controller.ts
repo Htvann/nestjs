@@ -3,14 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
-  Patch,
   Post,
   UseGuards,
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { Product } from "./schema/product.schema";
 import { JwtGuard } from "../auth/guards/jwt.guards";
+import { CreateProductDto } from "./dto/create-product.dto";
 
 @Controller("product")
 @UseGuards(JwtGuard)
@@ -24,36 +24,26 @@ export class ProductController {
 
   @Get(":id")
   async findOne(@Param("id") id: string) {
-    return await this.productService.findOne(id);
-  }
-
-  @Patch(":id")
-  async findAndUpdate(
-    @Param("id") id: string,
-    @Body("name") name: string,
-    @Body("total") total: number,
-    @Body("description") description: string,
-  ) {
-    const item = await this.productService.findOne(id);
-    if (item) {
-      const newDto = new Product();
-      newDto.name = name ?? item.name;
-      newDto.total = total ?? item.total;
-      newDto.description = description ?? item.description;
-      return await this.productService.findAndUpdate(id, newDto);
+    const data = await this.productService.findOne(id);
+    if (data) {
+      return data;
     }
+    throw new NotFoundException();
   }
 
   @Post()
-  async createProduct(
-    @Body("name") name: string,
-    @Body("total") total: number,
-    @Body("description") description: string,
-  ) {
+  async createProduct(@Body() dto: CreateProductDto) {
+    const product = await this.productService.findAlias(dto.alias);
+
+    if (product.length) {
+      throw new Error();
+    }
+
     return await this.productService.create({
-      name: name,
-      total: total,
-      description: description,
+      name: dto.name,
+      total: dto.total,
+      price: dto.price,
+      alias: dto.alias,
     });
   }
 

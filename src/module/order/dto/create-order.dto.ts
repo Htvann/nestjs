@@ -1,9 +1,10 @@
 import { IsNumber, IsString } from "class-validator";
 import { Type } from "class-transformer";
+import { Types } from "mongoose";
 
 class IProduct {
   @IsString()
-  id: string;
+  id: Types.ObjectId;
 
   @IsNumber()
   amount: number;
@@ -11,5 +12,5 @@ class IProduct {
 
 export class CreateOrderDto {
   @Type(() => IProduct)
-  product: IProduct[];
+  products: IProduct[];
 }

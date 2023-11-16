@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Order, OrderDocument } from "./schemas/order.schema";
 import { Model, Types } from "mongoose";
@@ -17,31 +17,37 @@ export class OrderService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto & { userId: Types.ObjectId }) {
-    const { userId, product } = createOrderDto;
+    const { userId, products } = createOrderDto;
 
-    const arrProduct = await this.productModel.find({
-      _id: { $in: product.map((i) => i.id) },
-    });
-
-    console.log(arrProduct);
-
-    // const dto: Order = {
-    //   userId: userId,
-    //   product: arrProduct,
-    // };
-    //
-    // console.log("dto", dto);
-
-    // const newOrder = new this.orderModel(dto);
-    // return await newOrder.save();
+    try {
+      const arrProduct = await this.productModel.find({
+        _id: { $in: products.map((i) => i.id) },
+      });
+      if (arrProduct) {
+        const dto: Order = {
+          userId: userId,
+          products: products,
+        };
+        const newOrder = new this.orderModel(dto);
+        return await newOrder.save();
+      }
+    } catch (error) {
+      console.log("error", error);
+      throw new HttpException("No product", HttpStatus.NOT_FOUND);
+    }
   }
 
   async _detailOrder(id: Types.ObjectId) {
+    let arr = [];
     const data = await this.orderModel.findById(id);
-    if (data) {
-      return data;
+
+    try {
+      const arrProduct = await this.productModel.find({
+        _id: { $in: data.products.map((i) => i.id) },
+      });
+    } catch (error) {
+      throw new HttpException("No order", HttpStatus.NOT_FOUND);
     }
-    throw new Error();
   }
 
   async getAll() {
