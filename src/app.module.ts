@@ -4,20 +4,23 @@ import {
   NestModule,
   RequestMethod,
 } from "@nestjs/common";
-import { ProductModule } from "./module/product/product.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "./module/user/user.module";
 import { AuthModule } from "./module/auth/auth.module";
 import { LoggerMiddleware } from "./utils/middleware";
-import { OrderModule } from './module/order/order.module';
+import { AllExceptionFilter } from "./utils/httpExceptionFilter";
 
 @Module({
   imports: [
     MongooseModule.forRoot("mongodb://localhost:27017/amazon"),
-    ProductModule,
     UserModule,
     AuthModule,
-    OrderModule,
+  ],
+  providers: [
+    {
+      provide: "APP_FILTER",
+      useClass: AllExceptionFilter,
+    },
   ],
 })
 export class AppModule implements NestModule {

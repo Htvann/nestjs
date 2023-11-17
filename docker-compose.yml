@@ -5,15 +5,10 @@ services:
     image: mongo
     restart: always
     container_name: mongodb_amazon
-    # networks:
-    #   - nest_network
     ports:
       - 27017:27017
     volumes:
       - amazon:/data/db
-
-# networks:
-#   nest_network:
 
 volumes:
   amazon:
