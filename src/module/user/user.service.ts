@@ -7,11 +7,11 @@ import { CreateUserDto } from "./dto/user-create.dto";
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
   ) {}
 
   async _getAllUser(): Promise<IUserDetail[]> {
-    return await this.userModel.find();
+    return await this.userModel.find().select({ password: 0 });
   }
 
   async _findByEmail(email: string): Promise<UserDocument> {
@@ -24,11 +24,6 @@ export class UserService {
       .select({ password: 0 })
       .exec();
     return data;
-    // return {
-    //   _id: data._id,
-    //   name: data.name,
-    //   email: data.email,
-    // };
   }
 
   async create(dto: CreateUserDto): Promise<UserDocument> {

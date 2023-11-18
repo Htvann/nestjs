@@ -10,7 +10,7 @@ import { Types } from "mongoose";
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async register(dto: Readonly<CreateUserDto>) {
@@ -26,7 +26,6 @@ export class AuthService {
     };
     return await this.userService.create(newUser);
   }
-
   async doestPasswordMatch(dto: ILogin) {
     const user = await this.userService._findByEmail(dto.email);
     if (user) {

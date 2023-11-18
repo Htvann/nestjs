@@ -3,7 +3,7 @@ import { map, Observable } from "rxjs";
 
 export interface Response<T> {
   success: boolean;
-  result: any;
+  data: any;
   statusCode: number;
 }
 
@@ -19,8 +19,8 @@ export class TransformationInterceptor<T>
       map((data) => {
         return {
           success: true,
-          result: data,
           statusCode,
+          data: data,
         };
       })
     );
