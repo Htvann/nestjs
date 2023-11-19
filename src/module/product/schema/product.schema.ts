@@ -17,6 +17,9 @@ export class Product extends Document {
   @Prop({ type: Types.ObjectId })
   seller_id: Types.ObjectId;
 
+  @Prop({ default: "" })
+  primary_category_name: string;
+
   @Prop({ required: true, default: 0 })
   original_price: number;
 

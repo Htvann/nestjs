@@ -11,6 +11,7 @@ import { LoggerMiddleware } from "./utils/middleware";
 import { AllExceptionFilter } from "./utils/httpExceptionFilter";
 import { ProductModule } from "./module/product/product.module";
 import { AuthorModule } from "./module/author/author.module";
+import { SellerModule } from './module/seller/seller.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthorModule } from "./module/author/author.module";
     AuthModule,
     ProductModule,
     AuthorModule,
+    SellerModule,
   ],
   providers: [
     {

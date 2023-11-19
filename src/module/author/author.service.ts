@@ -23,7 +23,6 @@ export class AuthorService {
       ...dto,
       products: dto.products.map((i) => new Types.ObjectId(i)),
     };
-    console.log(newDto);
     const newAuthor = new this.authorModel(newDto);
     return await newAuthor.save();
   }
