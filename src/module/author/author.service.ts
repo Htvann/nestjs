@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Author } from "./schema/author.schema";
 import { Model, Types } from "mongoose";
 import { CreateAuthorDto } from "./dto/create-author.dto";
-import { Product } from "../product/schema/product.schema";
 
 @Injectable()
 export class AuthorService {
