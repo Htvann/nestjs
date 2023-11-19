@@ -9,8 +9,8 @@ import { UserModule } from "./module/user/user.module";
 import { AuthModule } from "./module/auth/auth.module";
 import { LoggerMiddleware } from "./utils/middleware";
 import { AllExceptionFilter } from "./utils/httpExceptionFilter";
-import { ProductModule } from './module/product/product.module';
-import { AuthorModule } from './module/author/author.module';
+import { ProductModule } from "./module/product/product.module";
+import { AuthorModule } from "./module/author/author.module";
 
 @Module({
   imports: [

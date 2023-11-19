@@ -7,8 +7,8 @@ export class Author extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: "Product" })
-  products: Product;
+  @Prop({ type: [Types.ObjectId], ref: Product.name })
+  products: Product[];
 }
 
 export const AuthorSchema = SchemaFactory.createForClass(Author);
