@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
+import { Author } from "src/module/author/schema/author.schema";
 
-class Author {
-  @Prop({ required: true })
-  _id: string;
+// class Author {
+//   @Prop({ required: true })
+//   _id: string;
 
-  @Prop({ required: true })
-  name: string;
-}
+//   @Prop({ required: true })
+//   name: string;
+// }
 
 @Schema()
 export class Product extends Document {
@@ -23,7 +24,7 @@ export class Product extends Document {
   @Prop({ required: true, default: 0 })
   original_price: number;
 
-  @Prop({ default: null })
+  @Prop({ default: null, type: Types.ObjectId, ref: "Author" })
   author: Author;
 
   @Prop({ required: true, default: 0 })

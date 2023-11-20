@@ -14,6 +14,6 @@ export class ProductService {
     return await newProduct.save();
   }
   async findAll() {
-    return await this.productModel.find().exec();
+    return await this.productModel.find().populate("author", "name").exec();
   }
 }

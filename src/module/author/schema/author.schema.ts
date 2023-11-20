@@ -7,7 +7,7 @@ export class Author extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: [Types.ObjectId], ref: Product.name })
+  @Prop({ type: [Types.ObjectId], ref: "Product" })
   products: Product[];
 }
 
