@@ -1,4 +1,4 @@
-import { IsMongoId, IsNumber, IsString } from "class-validator";
+import { IsMongoId, IsString } from "class-validator";
 import { Types } from "mongoose";
 
 export class CreateSellerDto {
