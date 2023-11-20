@@ -42,7 +42,7 @@ export class AllExceptionFilter implements ExceptionFilter {
         (exceptionResponse as HttpExceptionResponse).message ||
         exceptionResponse ||
         "Something went wrong",
-      //   errorResponse: exceptionResponse as HttpExceptionResponse,
+      errorResponse: (exceptionResponse as HttpExceptionResponse).message,
     };
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);

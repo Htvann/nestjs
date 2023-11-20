@@ -12,7 +12,7 @@ export class SellerService {
   create(createSellerDto: CreateSellerDto) {
     return "This action adds a new seller";
   }
-  findAll() {
-    return `This action returns all seller`;
+  async findAll() {
+    return await this.sellerModel.find();
   }
 }
