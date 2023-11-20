@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, NotFoundException, Post } from "@nestjs/common";
 import { CreateUserDto } from "../user/dto/user-create.dto";
 import { AuthService } from "./auth.service";
 
@@ -17,5 +17,6 @@ export class AuthController {
     if (data) {
       return await this.authService.login({ id: data._id });
     }
+    throw new NotFoundException();
   }
 }
