@@ -2,14 +2,6 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { Author } from "src/module/author/schema/author.schema";
 
-// class Author {
-//   @Prop({ required: true })
-//   _id: string;
-
-//   @Prop({ required: true })
-//   name: string;
-// }
-
 @Schema()
 export class Product extends Document {
   @Prop({ required: true })
