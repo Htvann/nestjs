@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Author } from "./schema/author.schema";
 import { Model, Types } from "mongoose";
 import { CreateAuthorDto } from "./dto/create-author.dto";
+import { UpdateAuthorDto } from "./dto/update-author.dto";
 
 @Injectable()
 export class AuthorService {
@@ -14,7 +15,7 @@ export class AuthorService {
     return await this.authorModel.find().populate("products").exec();
   }
 
-  async findById(id: string) {
+  async findById(id: Types.ObjectId) {
     return await this.authorModel.findById(id).populate("products").exec();
   }
 
@@ -25,5 +26,12 @@ export class AuthorService {
     };
     const newAuthor = new this.authorModel(newDto);
     return await newAuthor.save();
+  }
+
+  async update(id: Types.ObjectId, dto: UpdateAuthorDto) {
+    return await this.authorModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .populate("products", "name")
+      .exec();
   }
 }

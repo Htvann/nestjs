@@ -16,11 +16,14 @@ export class Product extends Document {
   @Prop({ required: true, default: 0 })
   original_price: number;
 
-  @Prop({ default: null, type: Types.ObjectId, ref: "Author" })
-  author: Author;
-
   @Prop({ required: true, default: 0 })
   discount: number;
+
+  @Prop({ required: true, default: 0 })
+  price: number;
+
+  @Prop({ default: null, type: Types.ObjectId, ref: "Author" })
+  author: Author;
 
   @Prop({ required: true, default: 0 })
   quantity_sold: number;
