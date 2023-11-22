@@ -1,10 +1,6 @@
-import { IsArray, IsString } from "class-validator";
-import { Types } from "mongoose";
+import { IsString } from "class-validator";
 
 export class CreateAuthorDto {
   @IsString()
   name: string;
-
-  @IsArray()
-  products: Types.ObjectId[];
 }

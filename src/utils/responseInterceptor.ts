@@ -12,7 +12,7 @@ export class TransformationInterceptor<T>
 {
   intercept(
     context: ExecutionContext,
-    next: CallHandler
+    next: CallHandler,
   ): Observable<Response<T>> {
     const statusCode = context.switchToHttp().getResponse().statusCode;
     return next.handle().pipe(
@@ -22,7 +22,7 @@ export class TransformationInterceptor<T>
           statusCode,
           data: data,
         };
-      })
+      }),
     );
   }
 }

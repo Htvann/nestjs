@@ -12,16 +12,41 @@ export class ProductService {
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
     @InjectModel(Author.name) private readonly authorModel: Model<Author>,
   ) {}
+
   async create(createProductDto: CreateProductDto) {
     const newProduct = new this.productModel(createProductDto);
     return await newProduct.save();
   }
+
   async findAll() {
     return await this.productModel.find().populate("author", "name").exec();
   }
 
+  async findAllByAuthor(id: Types.ObjectId) {
+    return await this.productModel.find({ author: id });
+  }
+
   async update(id: Types.ObjectId, dto: UpdateProductDto) {
     const res = await this.productModel.findById(id);
+
+    if (dto.original_price) {
+      if (dto.original_price < res.discount) {
+        throw new Error("new origin price < discount");
+      }
+    }
+
+    if (dto.discount) {
+      if (dto.discount > res.original_price) {
+        throw new Error("new discount > origin price");
+      }
+    }
+
+    if (dto.original_price && dto.discount) {
+      if (dto.discount > dto.original_price) {
+        throw new Error("new discount > new origin price");
+      }
+    }
+
     res.name = dto.name ?? res.name;
     res.primary_category_name =
       dto.primary_category_name ?? res.primary_category_name;
@@ -30,8 +55,7 @@ export class ProductService {
 
     res.author =
       (await this.authorModel.findById(dto.author)) ??
-      (await this.authorModel.findById(res.author)) ??
-      null;
+      (await this.authorModel.findById(res.author));
 
     return await res.save();
   }
