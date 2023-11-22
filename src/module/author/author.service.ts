@@ -4,7 +4,6 @@ import { Author } from "./schema/author.schema";
 import { Model, Types } from "mongoose";
 import { CreateAuthorDto } from "./dto/create-author.dto";
 import { UpdateAuthorDto } from "./dto/update-author.dto";
-import { Product } from "../product/schema/product.schema";
 
 @Injectable()
 export class AuthorService {
@@ -17,11 +16,6 @@ export class AuthorService {
   }
 
   async findById(id: Types.ObjectId) {
-    const author = await this.authorModel.findById(id).exec();
-    return author;
-  }
-
-  async tet(id: Types.ObjectId) {
     const data = await this.authorModel.aggregate([
       {
         $match: {
@@ -38,7 +32,6 @@ export class AuthorService {
       },
       { $project: { "products.author": 0 } },
     ]);
-
     return data[0];
   }
 

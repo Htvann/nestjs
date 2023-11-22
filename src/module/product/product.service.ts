@@ -22,10 +22,6 @@ export class ProductService {
     return await this.productModel.find().populate("author", "name").exec();
   }
 
-  async findAllByAuthor(id: Types.ObjectId) {
-    return await this.productModel.find({ author: id });
-  }
-
   async update(id: Types.ObjectId, dto: UpdateProductDto) {
     const res = await this.productModel.findById(id);
 

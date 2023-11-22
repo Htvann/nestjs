@@ -15,7 +15,7 @@ export class AuthorController {
 
   @Get(":id")
   async findById(@Param("id") id: Types.ObjectId) {
-    return this.authorService.tet(id);
+    return this.authorService.findById(id);
   }
 
   @Post()
