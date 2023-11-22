@@ -1,4 +1,5 @@
 import { IsNumber, IsOptional, IsString } from "class-validator";
+import { Types } from "mongoose";
 
 export class CreateProductDto {
   @IsString()
@@ -12,7 +13,7 @@ export class CreateProductDto {
 
   @IsString()
   @IsOptional()
-  author: string;
+  author: Types.ObjectId;
 
   @IsNumber()
   discount: number;

@@ -23,10 +23,15 @@ export class Product extends Document {
   price: number;
 
   @Prop({ default: null, type: Types.ObjectId, ref: "Author" })
-  author: Author;
+  author: Types.ObjectId;
 
   @Prop({ required: true, default: 0 })
   quantity_sold: number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+ProductSchema.pre("save", function (next) {
+  this.price = this.original_price - this.discount;
+  next();
+});
