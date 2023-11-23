@@ -12,7 +12,8 @@ export class AuthorService {
   ) {}
 
   async findAll() {
-    return await this.authorModel.find().exec();
+    const data = await this.authorModel.find().exec();
+    return { total: data.length, items: data };
   }
 
   async findById(id: Types.ObjectId) {
@@ -41,8 +42,11 @@ export class AuthorService {
   }
 
   async update(id: Types.ObjectId, dto: UpdateAuthorDto) {
-    return await this.authorModel
-      .findByIdAndUpdate(id, dto, { new: true })
-      .exec();
+    const data = await this.authorModel.findById(id);
+    if (data) {
+      data.name = dto.name ?? data.name;
+      return data.save();
+    }
+    throw new Error("something went wrong");
   }
 }

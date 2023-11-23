@@ -6,13 +6,14 @@ import { Model, Types } from "mongoose";
 
 @Injectable()
 export class SellerService {
-  constructor(
-    @InjectModel(Seller.name) private readonly sellerModel: Model<Seller>
-  ) {}
+  constructor(@InjectModel(Seller.name) private sellerModel: Model<Seller>) {}
   async create(createSellerDto: CreateSellerDto) {
     const dto: CreateSellerDto = {
       ...createSellerDto,
-      products: createSellerDto.products.map((i) => new Types.ObjectId(i)),
+      products: createSellerDto.products.map((i) => ({
+        _id: new Types.ObjectId(i._id),
+        total_product: i.total_product,
+      })),
     };
     const newSeller = new this.sellerModel(dto);
     return await newSeller.save();

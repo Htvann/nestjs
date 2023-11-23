@@ -1,10 +1,29 @@
-import { IsMongoId, IsString } from "class-validator";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 import { Types } from "mongoose";
+import { Type } from "class-transformer";
+
+class Item {
+  @IsString()
+  @IsNotEmpty()
+  _id: Types.ObjectId;
+
+  @IsNumber()
+  @IsNotEmpty()
+  total_product: number;
+}
 
 export class CreateSellerDto {
   @IsString()
   name: string;
 
-  @IsMongoId({ each: true })
-  products: Types.ObjectId[];
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Item)
+  products: Item[];
 }
