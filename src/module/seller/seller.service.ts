@@ -14,7 +14,7 @@ export class SellerService {
 
   async create(createSellerDto: CreateSellerDto) {
     try {
-      await this.productServie.findAll(
+      await this.productServie.findMany(
         createSellerDto.products.map((i) => i._id),
       );
       const dto = {
