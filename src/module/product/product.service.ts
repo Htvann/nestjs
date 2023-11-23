@@ -4,13 +4,13 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Product } from "./schema/product.schema";
 import { Model, Types } from "mongoose";
 import { UpdateProductDto } from "./dto/update-product.dto";
-import { Author } from "../author/schema/author.schema";
+import { AuthorService } from "../author/author.service";
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
-    @InjectModel(Author.name) private readonly authorModel: Model<Author>,
+    private readonly authorService: AuthorService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -50,8 +50,8 @@ export class ProductService {
     res.discount = dto.discount ?? res.discount;
 
     res.author =
-      (await this.authorModel.findById(dto.author)) ??
-      (await this.authorModel.findById(res.author));
+      (await this.authorService.findById(dto.author)) ??
+      (await this.authorService.findById(res.author));
 
     return await res.save();
   }

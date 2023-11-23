@@ -10,5 +10,6 @@ import { Author, AuthorSchema } from "./schema/author.schema";
   ],
   controllers: [AuthorController],
   providers: [AuthorService],
+  exports: [AuthorService],
 })
 export class AuthorModule {}

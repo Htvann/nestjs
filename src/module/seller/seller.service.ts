@@ -7,18 +7,23 @@ import { Model, Types } from "mongoose";
 @Injectable()
 export class SellerService {
   constructor(@InjectModel(Seller.name) private sellerModel: Model<Seller>) {}
+
   async create(createSellerDto: CreateSellerDto) {
-    const dto: CreateSellerDto = {
+    const dto = {
       ...createSellerDto,
       products: createSellerDto.products.map((i) => ({
-        _id: new Types.ObjectId(i._id),
+        product: new Types.ObjectId(i._id),
         total_product: i.total_product,
       })),
     };
     const newSeller = new this.sellerModel(dto);
     return await newSeller.save();
   }
+
   async findAll() {
-    return await this.sellerModel.find();
+    return await this.sellerModel.find().populate({
+      path: "products",
+      populate: "product",
+    });
   }
 }
