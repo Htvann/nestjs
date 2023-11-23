@@ -7,7 +7,7 @@ class Item extends Document {
   @Prop({ type: Types.ObjectId, ref: Product.name })
   product: Types.ObjectId;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, default: 0 })
   total_product: number;
 
   @Prop({ default: 0 })
@@ -20,9 +20,9 @@ export class Seller extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ default: 0 })
   total_revenue: number;
-  @Prop({ type: [ItemSchema], required: true })
+  @Prop({ type: [ItemSchema], default: [] })
   products: Item[];
 }
 

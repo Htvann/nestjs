@@ -18,8 +18,19 @@ export class ProductService {
     return await newProduct.save();
   }
 
-  async findAll() {
-    return await this.productModel.find().populate("author", "name").exec();
+  async findAll(id?: Types.ObjectId[]) {
+    return await this.productModel
+      .find({
+        _id: {
+          $in: id,
+        },
+      })
+      .populate("author", "name")
+      .exec();
+  }
+
+  async findOne(id: Types.ObjectId) {
+    return await this.productModel.findById(id);
   }
 
   async update(id: Types.ObjectId, dto: UpdateProductDto) {
