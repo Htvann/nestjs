@@ -21,9 +21,6 @@ export class Seller extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ default: 0 })
-  total_revenue: number;
-
   @Prop({ type: [ItemSchema], default: [] })
   products: Item[];
 }

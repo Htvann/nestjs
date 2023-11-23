@@ -34,49 +34,72 @@ export class SellerService {
   }
 
   async findAll() {
-    return await this.sellerModel.find().populate({
-      path: "products",
-      populate: "product",
-    });
+    try {
+      const list = await this.sellerModel.aggregate([
+        {
+          $lookup: {
+            from: "products",
+            localField: "products.product",
+            foreignField: "_id",
+            as: "productsData",
+          },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $addFields: {
+            "products.productDetails": {
+              $filter: {
+                input: "$productsData",
+                as: "prod",
+                cond: { $eq: ["$$prod._id", "$products.product"] },
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            "products.sum": {
+              $multiply: [
+                { $arrayElemAt: ["$products.productDetails.price", 0] },
+                "$products.quantity_sold",
+              ],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id",
+            name: { $first: "$name" },
+            products: {
+              $push: {
+                product: { $arrayElemAt: ["$products.productDetails", 0] },
+                total_product: "$products.total_product",
+                quantity_sold: "$products.quantity_sold",
+              },
+            },
+            totalSum: { $sum: "$products.sum" },
+          },
+        },
+      ]);
+      return list;
+    } catch (error) {}
   }
 
   async userOrder(id: string, dto: { id: string; amount: number }[]) {
     try {
-      const listProduct = await this.productServie.findMany(
-        dto.map((i) => new Types.ObjectId(i.id)),
-      );
-
       await this.sellerModel.findById(new Types.ObjectId(id)).then((res) => {
-        const newProduct = res.products.map((item) => ({
-          total_product: item.total_product,
-          product: item.product,
-          quantity_sold:
-            item.quantity_sold +
-              dto.find((i) => i.id === item.product.toString()).amount ?? 0,
-        }));
+        const newProduct = res.products.map((item) => {
+          return {
+            total_product: item.total_product,
+            product: item.product,
+            quantity_sold:
+              item.quantity_sold +
+                dto.find((i) => i.id === item.product.toString())?.amount || 0,
+          };
+        });
 
-        const sum = listProduct.reduce(
-          (
-            total: number,
-            currentValue: { _id: Types.ObjectId; price: number },
-          ) => {
-            console.log(
-              newProduct.find(
-                (i) => i.product.toString() === currentValue._id.toString(),
-              ),
-            );
-            return (
-              total +
-              currentValue.price *
-                newProduct.find(
-                  (i) => i.product.toString() === currentValue._id.toString(),
-                ).quantity_sold
-            );
-          },
-          0,
-        );
-
-        res.total_revenue = sum;
         res.products = newProduct;
         return res.save();
       });
