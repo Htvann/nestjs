@@ -5,13 +5,12 @@ import {
   IsString,
   ValidateNested,
 } from "class-validator";
-import { Types } from "mongoose";
 import { Type } from "class-transformer";
 
 class Item {
   @IsString()
   @IsNotEmpty()
-  _id: Types.ObjectId;
+  _id: string;
 
   @IsNumber()
   @IsNotEmpty()

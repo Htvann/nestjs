@@ -2,26 +2,29 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { Product } from "src/module/product/schema/product.schema";
 
+@Schema({ _id: false })
 class Item extends Document {
   @Prop({ type: Types.ObjectId, ref: Product.name })
-  _id: Types.ObjectId;
+  product: Product;
 
-  // @Prop({ type: Number, required: true, default: 0 })
-  // total_product: number;
+  @Prop({ type: Number, required: true })
+  total_product: number;
 
-  // @Prop({ required: true, default: 0 })
-  // quantity_sold: number;
+  @Prop({ default: 0 })
+  quantity_sold: number;
 }
+const ItemSchema = SchemaFactory.createForClass(Item);
 
 @Schema()
 export class Seller extends Document {
-  // @Prop({ required: true })
-  // name: string;
-  //
-  // @Prop({ required: true, default: 0 })
-  // total_revenue: number;
-  // @Prop({ type: Item, required: true, default: [] })
-  // products: Item[];
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ default: 0 })
+  total_revenue: number;
+
+  @Prop({ type: [ItemSchema], default: [] })
+  products: Item[];
 }
 
 export const SellerSchema = SchemaFactory.createForClass(Seller);
