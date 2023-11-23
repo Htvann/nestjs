@@ -4,7 +4,7 @@ import { map, Observable } from "rxjs";
 export interface Response<T> {
   success: boolean;
   data: any;
-  statusCode: number;
+  status: number;
 }
 
 export class TransformationInterceptor<T>
@@ -14,12 +14,12 @@ export class TransformationInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<Response<T>> {
-    const statusCode = context.switchToHttp().getResponse().statusCode;
+    const status = context.switchToHttp().getResponse().statusCode;
     return next.handle().pipe(
       map((data) => {
         return {
           success: true,
-          statusCode,
+          status,
           data: data,
         };
       }),

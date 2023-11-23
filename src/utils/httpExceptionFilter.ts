@@ -8,7 +8,7 @@ import {
 import { HttpAdapterHost } from "@nestjs/core";
 
 export interface HttpExceptionResponse {
-  statusCode: number;
+  status: number;
   message: string;
   error: string;
 }
@@ -36,7 +36,7 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     const responseBody = {
       success: false,
-      statusCode: httpStatus,
+      status: httpStatus,
       message:
         (exceptionResponse as HttpExceptionResponse).error ||
         (exceptionResponse as HttpExceptionResponse).message ||
