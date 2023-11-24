@@ -22,6 +22,21 @@ export class ProductService {
     return await this.productModel.find().populate("author", "name").exec();
   }
 
+  async findMany(id?: Types.ObjectId[]) {
+    return await this.productModel
+      .find({
+        _id: {
+          $in: id,
+        },
+      })
+      .populate("author", "name")
+      .exec();
+  }
+
+  async findOne(id: Types.ObjectId) {
+    return await this.productModel.findById(id);
+  }
+
   async update(id: Types.ObjectId, dto: UpdateProductDto) {
     const res = await this.productModel.findById(id);
 

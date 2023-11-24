@@ -3,11 +3,11 @@ import { Document, Types } from "mongoose";
 import { Product } from "src/module/product/schema/product.schema";
 
 @Schema({ _id: false })
-class Item extends Document {
+class Item {
   @Prop({ type: Types.ObjectId, ref: Product.name })
-  product: Product;
+  product: Types.ObjectId;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, default: 0 })
   total_product: number;
 
   @Prop({ default: 0 })
@@ -19,9 +19,6 @@ const ItemSchema = SchemaFactory.createForClass(Item);
 export class Seller extends Document {
   @Prop({ required: true })
   name: string;
-
-  @Prop({ default: 0 })
-  total_revenue: number;
 
   @Prop({ type: [ItemSchema], default: [] })
   products: Item[];

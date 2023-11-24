@@ -7,11 +7,11 @@ import { AuthorModule } from "../author/author.module";
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
     AuthorModule,
+    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
   ],
   controllers: [ProductController],
   providers: [ProductService],
   exports: [ProductService],
 })
-export class ProductModule {}
+export class ProductModule { }

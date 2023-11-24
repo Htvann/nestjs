@@ -11,11 +11,13 @@ import { LoggerMiddleware } from "./utils/middleware";
 import { AllExceptionFilter } from "./utils/httpExceptionFilter";
 import { ProductModule } from "./module/product/product.module";
 import { AuthorModule } from "./module/author/author.module";
-import { SellerModule } from './module/seller/seller.module';
+import { SellerModule } from "./module/seller/seller.module";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://localhost:27017/amazon"),
+    MongooseModule.forRoot("mongodb://localhost:27017/amazon", {
+      autoCreate: true,
+    }),
     UserModule,
     AuthModule,
     ProductModule,
