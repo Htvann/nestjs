@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param } from "@nestjs/common";
 import { SellerService } from "./seller.service";
 import { CreateSellerDto } from "./dto/create-seller.dto";
+import { UserOrderDto } from "./dto/update-seller.dto";
 
 @Controller("seller")
 export class SellerController {
@@ -17,10 +18,7 @@ export class SellerController {
   }
 
   @Patch(":id")
-  async update(
-    @Param("id") id: string,
-    @Body() dto: { id: string; amount: number }[],
-  ) {
-    return this.sellerService.userOrder(id, dto);
+  async userOrder(@Param("id") id: string, @Body() dto: UserOrderDto) {
+    return this.sellerService.userOrder(id, dto.products);
   }
 }
