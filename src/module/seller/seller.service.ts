@@ -10,7 +10,7 @@ export class SellerService {
   constructor(
     @InjectModel(Seller.name) private sellerModel: Model<Seller>,
     private readonly productService: ProductService,
-  ) {}
+  ) { }
 
   async create(createSellerDto: CreateSellerDto) {
     try {
@@ -20,25 +20,48 @@ export class SellerService {
       const dto = {
         name: createSellerDto.name,
         total_revenue: 0,
+
         products: createSellerDto.products.map((i) => ({
           product: new Types.ObjectId(i._id),
           quantity_sold: 0,
           total_product: i.total_product,
         })),
+
       };
       const newSeller = new this.sellerModel(dto);
       return await newSeller.save();
     } catch (error) {
+      console.log("error", error);
       throw new Error("something went wrrong!");
     }
   }
 
   async findAll() {
     try {
-      const data = await this.sellerModel
-        .find()
-        .populate({ path: "products", populate: "_id" });
-      return data;
+      const data = await this.sellerModel.aggregate([
+        {
+          $unwind: '$products',
+        }
+        , {
+          $lookup: {
+            from: "products",
+            localField: "products.product",
+            foreignField: "_id",
+            as: "products.product",
+          }
+        },
+        {
+          $unwind: '$products.product'
+        },
+        {
+          "$group": {
+            "_id": "$_id",
+            "products": { "$push": "$products" },
+          }
+        }
+      ])
+      return data
+
     } catch (error) {
       console.log("error", error);
     }
@@ -48,16 +71,7 @@ export class SellerService {
     const item = await this.sellerModel
       .findById(new Types.ObjectId(id))
       .then((res) => {
-        // const newProduct = res.products.map((item) => {
-        //   return {
-        //     total_product: item.total_product,
-        //     product: item.product,
-        //     quantity_sold:
-        //       item.quantity_sold +
-        //         dto.find((i) => i.id === item.product.toString())?.amount || 0,
-        //   };
-        // });
-        // res.products = newProduct;
+        console.log('res', res)
         return res.save();
       });
 

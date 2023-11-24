@@ -4,7 +4,7 @@ import { Product } from "src/module/product/schema/product.schema";
 
 @Schema({ _id: false })
 class Item {
-  @Prop({ type: Product, ref: Product.name })
+  @Prop({ type: Types.ObjectId, ref: Product.name })
   product: Types.ObjectId;
 
   @Prop({ type: Number, default: 0 })
