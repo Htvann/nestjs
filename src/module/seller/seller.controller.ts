@@ -5,7 +5,7 @@ import { UserOrderDto } from "./dto/update-seller.dto";
 
 @Controller("seller")
 export class SellerController {
-  constructor(private readonly sellerService: SellerService) { }
+  constructor(private readonly sellerService: SellerService) {}
 
   @Post()
   create(@Body() createSellerDto: CreateSellerDto) {
