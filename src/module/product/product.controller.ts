@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseInterceptors,
+} from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { Types } from "mongoose";
+import { CacheInterceptor } from "@nestjs/cache-manager";
 
 @Controller("product")
 export class ProductController {
@@ -13,6 +22,7 @@ export class ProductController {
     return this.productService.create(createProductDto);
   }
 
+  @UseInterceptors(CacheInterceptor)
   @Get()
   findAll() {
     return this.productService.findAll();

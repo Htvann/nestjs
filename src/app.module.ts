@@ -4,7 +4,6 @@ import {
   NestModule,
   RequestMethod,
 } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "./module/user/user.module";
 import { AuthModule } from "./module/auth/auth.module";
 import { LoggerMiddleware } from "./utils/middleware";
@@ -16,6 +15,8 @@ import { ConfigModule } from "@nestjs/config";
 import config from "./config";
 import { DatabaseModule } from "./database/database.module";
 import { environments } from "./common/env";
+import { CacheModule } from "@nestjs/cache-manager";
+import { redisStore } from "cache-manager-redis-yet";
 
 @Module({
   imports: [
@@ -23,6 +24,18 @@ import { environments } from "./common/env";
       envFilePath: environments.dev,
       load: [config],
       isGlobal: true,
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await redisStore({
+          socket: {
+            host: "localhost",
+            port: 6379,
+          },
+        }),
+        ttl: 0,
+      }),
     }),
     DatabaseModule,
     UserModule,

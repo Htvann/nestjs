@@ -14,4 +14,4 @@ import { AuthorModule } from "../author/author.module";
   providers: [ProductService],
   exports: [ProductService],
 })
-export class ProductModule { }
+export class ProductModule {}

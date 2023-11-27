@@ -10,5 +10,10 @@ services:
     volumes:
       - amazon:/data/db
 
+  cache:
+    image: redis:6.2
+    container_name: wallet-redis
+    ports:
+      - 6379:6379
 volumes:
   amazon:
