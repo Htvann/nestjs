@@ -15,5 +15,14 @@ services:
     container_name: wallet-redis
     ports:
       - 6379:6379
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - "8001:8001"
+    volumes:
+      - redisinsight:/db
+
 volumes:
   amazon:
+  redisinsight:
