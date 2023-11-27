@@ -12,12 +12,19 @@ import { AllExceptionFilter } from "./utils/httpExceptionFilter";
 import { ProductModule } from "./module/product/product.module";
 import { AuthorModule } from "./module/author/author.module";
 import { SellerModule } from "./module/seller/seller.module";
+import { ConfigModule } from "@nestjs/config";
+import config from "./config";
+import { DatabaseModule } from "./database/database.module";
+import { environments } from "./common/env";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://localhost:27017/amazon", {
-      autoCreate: true,
+    ConfigModule.forRoot({
+      envFilePath: environments.dev,
+      load: [config],
+      isGlobal: true,
     }),
+    DatabaseModule,
     UserModule,
     AuthModule,
     ProductModule,
