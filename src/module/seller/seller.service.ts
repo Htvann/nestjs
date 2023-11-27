@@ -10,7 +10,7 @@ export class SellerService {
   constructor(
     @InjectModel(Seller.name) private sellerModel: Model<Seller>,
     private readonly productService: ProductService,
-  ) { }
+  ) {}
 
   async create(createSellerDto: CreateSellerDto) {
     try {
@@ -26,7 +26,6 @@ export class SellerService {
           quantity_sold: 0,
           total_product: i.total_product,
         })),
-
       };
       const newSeller = new this.sellerModel(dto);
       return await newSeller.save();
@@ -40,28 +39,27 @@ export class SellerService {
     try {
       const data = await this.sellerModel.aggregate([
         {
-          $unwind: '$products',
-        }
-        , {
+          $unwind: "$products",
+        },
+        {
           $lookup: {
             from: "products",
             localField: "products.product",
             foreignField: "_id",
             as: "products.product",
-          }
+          },
         },
         {
-          $unwind: '$products.product'
+          $unwind: "$products.product",
         },
         {
-          "$group": {
-            "_id": "$_id",
-            "products": { "$push": "$products" },
-          }
-        }
-      ])
-      return data
-
+          $group: {
+            _id: "$_id",
+            products: { $push: "$products" },
+          },
+        },
+      ]);
+      return data;
     } catch (error) {
       console.log("error", error);
     }
@@ -71,7 +69,6 @@ export class SellerService {
     const item = await this.sellerModel
       .findById(new Types.ObjectId(id))
       .then((res) => {
-        console.log('res', res)
         return res.save();
       });
 
